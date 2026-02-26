@@ -1,8 +1,11 @@
 import joblib
 import numpy as np
+import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import KFold, RandomizedSearchCV, cross_val_score
 from sklearn.metrics import mean_squared_error, r2_score
+import lightgbm as lgb
+import optuna
 
 def evaluate_model(name, y_true, y_pred):
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
@@ -47,3 +50,36 @@ def main():
     print("\n3. Entraînement du Modèle 2 : LightGBM optimisé avec Optuna (Bayesian Optimization)")
     # Justification (Rapport) : LightGBM a été préféré car il gère mieux et 
     # plus rapidement l'apprentissage de par sa construction d'arbre (leaf-wise).
+    
+    def objective(trial):
+        params = {
+            'n_estimators': trial.suggest_int('n_estimators', 100, 500),
+            'max_depth': trial.suggest_int('max_depth', 3, 10),
+            'learning_rate': trial.suggest_float('learning_rate', 0.01, 0.3, log=True),
+            'subsample': trial.suggest_float('subsample', 0.6, 1.0),
+            'random_state': 42,
+            'verbose': -1
+        }
+        model = lgb.LGBMRegressor(**params)
+        scores = cross_val_score(model, X_train, y_train, cv=kf, scoring='neg_root_mean_squared_error')
+        return -scores.mean()
+
+    optuna.logging.set_verbosity(optuna.logging.WARNING)
+    study = optuna.create_study(direction='minimize')
+    print("Recherche Optuna en cours (15 itérations d'exploration des paramètres) ...")
+    study.optimize(objective, n_trials=15)
+    
+    print(f"Meilleurs hyperparamètres LightGBM : {study.best_params}")
+    
+    best_lgb = lgb.LGBMRegressor(**study.best_params, random_state=42, verbose=-1)
+    best_lgb.fit(X_train, y_train)
+    
+    y_pred_lgb = best_lgb.predict(X_val)
+    evaluate_model("LightGBM", y_val, y_pred_lgb)
+
+    print("\nSauvegarde du modèle LightGBM ('lightgbm_model.pkl') pour éventuelle prédiction...")
+    joblib.dump(best_lgb, 'lightgbm_model.pkl')
+    print("Fin de l'approche Classique ML.")
+
+if __name__ == "__main__":
+    main()
