@@ -68,3 +68,5 @@ Développement sous `TensorFlow/Keras` d'un Réseau de Neurones (MLP).
 L'expérience confirme un postulat classique du domaine de la Data Science : sur les datasets structurés tabulaires d'une volumétrie moyenne (< 1 M lignes), les algorithmes d'ensemble par Gradient Boosting tendent à vaincre structurellement le Deep Learning pur.
 En témoigne notre Gradient Booster (`LightGBM`), armé de sa calibration via l'optimiseur Bayésien Optuna, qui achève la meilleure généralisation avec **82%** de variance expliquée et la plus faible erreur monétaire (RMSE). Ce modèle a été exporté en sérialisation `.pkl` et peut d'ores et déjà être déployé en architecture de production.
 
+## Lien vers le Kaggle
+https://www.kaggle.com/code/jillanisofttech/flight-price-prediction/notebook
