@@ -69,4 +69,4 @@ L'expérience confirme un postulat classique du domaine de la Data Science : sur
 En témoigne notre Gradient Booster (`LightGBM`), armé de sa calibration via l'optimiseur Bayésien Optuna, qui achève la meilleure généralisation avec **82%** de variance expliquée et la plus faible erreur monétaire (RMSE). Ce modèle a été exporté en sérialisation `.pkl` et peut d'ores et déjà être déployé en architecture de production.
 
 ## Lien vers le Kaggle
-https://www.kaggle.com/code/jillanisofttech/flight-price-prediction/notebook
+https://www.kaggle.com/datasets/jillanisofttech/flight-price-prediction-dataset
